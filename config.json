@@ -1,0 +1,193 @@
+{
+  "kb_priority": [
+    {
+      "name": "产品库",
+      "id": "7328950120379741",
+      "tier": 4,
+      "role": "official",
+      "cite": "据产品库资料显示"
+    },
+    {
+      "name": "保来屋经纪",
+      "id": "7447277815732978",
+      "tier": 3,
+      "role": "opinion",
+      "cite": "保来屋经纪观点"
+    },
+    {
+      "name": "保知堂",
+      "id": "7494240863002273",
+      "tier": 2,
+      "role": "reference",
+      "cite": "（内部参考，不向用户展示原文链接）"
+    },
+    {
+      "name": "保险业干货",
+      "id": "7346181717887705",
+      "tier": 1,
+      "role": "news",
+      "cite": "（行业背景，不作投保结论依据）"
+    }
+  ],
+  "_kb_id_note": "上面四个 id 是作者 IMA 账户下的知识库。IMA 的知识库是账号绑定的云端资源，OpenAPI 没有「创建知识库」接口，因此无法随技能包自动安装。接收方要么加入作者发布的共享知识库（推荐，内容自动同步），要么在 config.json 里改成自己账户下的 id。两种做法见 references/offline-kb.md。",
+  "kb_auto_map_by_name": true,
+  "kb_share_links": {
+    "_note": "作者发布共享知识库后，把邀请链接/二维码地址填到这里，接收方点开即可加入。为空表示作者尚未发布，此时接收方走离线快照兜底。",
+    "产品库": "https://ima.qq.com/wiki/?shareId=47b8578c952fbcf4525ec61a6f99be94f591249d4a463dd22488e08292fd7598",
+    "保来屋经纪": "https://ima.qq.com/wiki/?shareId=97468b1aef7f2180a8122af79334a6f5471c56d62cfb4d4aecb6cab63fc57a9a",
+    "保知堂": "https://ima.qq.com/wiki/?shareId=6f6a97dfd9fcc1e970d998aa0e9ab580757c0c5d4ec60df761feee633b85a349",
+    "保险业干货": "https://ima.qq.com/wiki/?shareId=8a9b382ad2add55d033484e1751adc907e5181bc8315fc38930873e78c738bff"
+  },
+  "offline_fallback": {
+    "enabled": true,
+    "snapshot_date": "2026-08-16",
+    "script": "scripts/kb_search.py",
+    "usage": "python scripts/kb_search.py \"检索词\" --top 5",
+    "covers": {
+      "baolaowu": "保来屋经纪公众号 567 篇（title + digest + url）",
+      "baozhitang": "保知堂 10 篇（全文）",
+      "industry": "保险业干货 535 篇（全文）"
+    },
+    "_missing": "产品库的条款/费率/核保规则不在离线快照里——那类内容只存在于作者的 IMA 库，离线检索不到时必须明说「产品条款以官方当前为准」，不得推测。"
+  },
+  "self_check": {
+    "on_first_run": true,
+    "items": [
+      {
+        "id": "ima_connector",
+        "check": "工具列表里是否存在 ima 知识库连接器提供的检索工具（search_knowledge）",
+        "fail_msg": "未连接 IMA 知识库连接器。请在 WorkBuddy 的连接器里连接「ima知识库」，否则只能使用离线快照。"
+      },
+      {
+        "id": "kb_available",
+        "check": "用 kb_priority 的 id 检索一次，返回空或报错则判定为「未加入/未配置」",
+        "fail_msg": "知识库不可用。加入作者的共享知识库，或按 references/offline-kb.md 配置自己的 kb_id。"
+      },
+      {
+        "id": "offline_ready",
+        "check": "data/ 目录下三个 json 是否存在，且 python scripts/kb_search.py 可正常执行",
+        "fail_msg": "离线快照不可用，此时既没有 IMA 也没有本地数据，必须如实告知用户无法检索，不要凭记忆作答。"
+      },
+      {
+        "id": "companion_skills",
+        "check": "yurenzhe-perspective 是否已安装（老余口吻与思维框架来源）",
+        "fail_msg": "缺少 yurenzhe-perspective。老余的人格与表达 DNA 来自该技能，缺了它回答会失去老余味。本分享包已附带，解压到 skills 目录即可。"
+      }
+    ]
+  },
+  "companion_skills": {
+    "yurenzhe-perspective": {
+      "level": "strong",
+      "why": "老余的 5 个心智模型、8 条决策启发式、表达 DNA。回答的「老余味」来自这里。"
+    },
+    "laoyu-client-grill": {
+      "level": "soft",
+      "why": "客户需求说不清时的三步澄清法：先呈现候选，再精准追问。咨询场景触发时可选加载。"
+    },
+    "baolaiwu": {
+      "level": "soft",
+      "why": "通用保险经纪工作台（选品/条款/渠道/理赔/保额测算）。本技能聚焦「老余这个具体的人」，baolaiwu 聚焦「保险经纪这个职业」，需要纯业务工具时加载。"
+    },
+    "laoyu-ima-copilot-prompt": {
+      "level": "alt-channel",
+      "why": "不走 WorkBuddy、想在 IMA 智能体里配一个老余时用的系统提示词，见分享包的 ima-agent/ 目录。"
+    }
+  },
+  "fallback_web": true,
+  "ima_search_tool": "mcp__ima-mcp__search_knowledge",
+  "special_cases": {
+    "thyroid_keywords": [
+      "甲状腺结节",
+      "甲状腺结",
+      "甲状腺",
+      "甲状结节"
+    ],
+    "thyroid_exclude": [
+      "理赔",
+      "怎么赔",
+      "赔多少",
+      "赔付",
+      "索赔",
+      "条款",
+      "保险责任",
+      "对比",
+      "比较",
+      "区别"
+    ],
+    "coverage_keywords": [
+      "保障方案",
+      "保障结构",
+      "保障配置",
+      "只有社保",
+      "刚毕业",
+      "家庭保障"
+    ],
+    "disease_exclude_keywords": [
+      "高血压",
+      "糖尿病",
+      "心脑血管",
+      "心血管疾病",
+      "脑卒中",
+      "中风",
+      "抑郁症",
+      "焦虑",
+      "失眠",
+      "特异性皮炎",
+      "皮炎",
+      "肿瘤",
+      "癌症",
+      "结节",
+      "甲状腺",
+      "甲亢",
+      "甲减",
+      "乙肝",
+      "胃炎",
+      "哮喘",
+      "痛风",
+      "关节炎",
+      "冠心病",
+      "肾病",
+      "肺病",
+      "囊肿",
+      "息肉",
+      "增生",
+      "肌瘤",
+      "房缺",
+      "房间隔缺损",
+      "室缺",
+      "室间隔缺损",
+      "先心",
+      "先心病",
+      "先天性心脏病",
+      "心脏",
+      "心脏病",
+      "心脏瓣膜",
+      "瓣膜",
+      "二尖瓣",
+      "三尖瓣",
+      "主动脉瓣",
+      "卵圆孔",
+      "动脉导管",
+      "冠脉",
+      "心肌病",
+      "心包",
+      "慢病",
+      "患病",
+      "病史",
+      "既往症",
+      "既往病史",
+      "带病",
+      "确诊",
+      "得病",
+      "查出",
+      "病症",
+      "血糖高",
+      "血糖过高",
+      "高血糖",
+      "血压高",
+      "血压过高",
+      "高血脂",
+      "血脂高"
+    ]
+  }
+}
